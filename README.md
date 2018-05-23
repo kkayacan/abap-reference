@@ -1,22 +1,25 @@
 # sap-lib
-Template programs, utility procedures and code samples for ABAP and other SAP development tools. Contributions are welcome. Templates, programs and classes are exported via [abapGit](https://github.com/larshp/abapGit)
+Template programs, utility procedures and code samples for ABAP and other SAP development tools. Contributions are welcome. 
+
+Templates, programs and classes (abap/lib-package folder) are exported via [abapGit](https://github.com/larshp/abapGit)
 
 #### Disclaimer
 Code in snippets folder are samples and are not guaranteed to work by just copying and pasting. Adjust it according to your requirement.
 
 ##### Folder structure
 - [abap](abap/)
-  - [programs](abap/programs/)
+  - [lib-package](abap/lib-package/) Templates and programs exported via abapGit
+    - [prog](abap/lib-package/prog/) Programs
+    - [tmplt](abap/lib-package/tmplt/) Templates
   - [snippets](abap/snippets/)
-  - [templates](abap/templates/)
 
 ##### Index
 - ALV
   - [List variant search help for SLIS ALV](abap/snippets/REUSE_ALV_VARIANT_F4.abap)
-  - [SLIS ALV report template with user interaction functionality](abap/templates/slis-alv-report-template/)
+  - [SLIS ALV report template with user interaction functionality](abap/lib-package/tmplt/slis-alv-report-template/)
   
 - Code extraction/download/backup
-  - [Program to extract ABAP development objects to html/text files](abap/programs/mass-download/)
+  - [Program to extract ABAP development objects to html/text files](abap/lib-package/prog/mass-download/)
   
 - Data dictionary
   - [Get domain value text](abap/snippets/get-domain-value-text.abap)

@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <PROGDIR>
-    <NAME>YDTP_MASS_DOWNLOAD</NAME>
+    <NAME>YP_ALV_TEMPLATE</NAME>
     <STATE>A</STATE>
     <VARCL>X</VARCL>
     <SUBC>1</SUBC>
@@ -11,11 +11,12 @@
     <FIXPT>X</FIXPT>
     <UCCHECK>X</UCCHECK>
    </PROGDIR>
+   <DYNPROS/>
    <TPOOL>
     <item>
      <ID>R</ID>
-     <ENTRY>Mass download of development objects</ENTRY>
-     <LENGTH>36</LENGTH>
+     <ENTRY>SLIS ALV report template with user interaction functionality</ENTRY>
+     <LENGTH>60</LENGTH>
     </item>
    </TPOOL>
   </asx:values>
