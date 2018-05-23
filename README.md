@@ -16,6 +16,9 @@ Code in snippets folder are samples and are not guaranteed to work by just copyi
   
 - Excel
   - [Create native Excel file in background and send as email attachment](abap/snippets/create-excel-bg-and-send-mail.abap)
+  
+- FI
+  - [Split items of BAPI_ACC_DOCUMENT_POST](abap/snippets/BAPI_ACC_DOCUMENT_POST-split-items.abap)
 
 - Search help
   - [F4IF_INT_TABLE_VALUE_REQUEST generic use](abap/snippets/F4IF_INT_TABLE_VALUE_REQUEST.abap)
