@@ -20,6 +20,9 @@ Code in snippets folder are samples and are not guaranteed to work by just copyi
 - FI
   - [Split items of BAPI_ACC_DOCUMENT_POST](abap/snippets/BAPI_ACC_DOCUMENT_POST-split-items.abap)
   - [Get GL account for tax indicator](abap/snippets/FI_TAX_GET_TAX_ACCOUNTS.abap)
+  
+- Message
+  - [Message display](abap/snippets/message-display.abap)
 
 - Search help
   - [F4IF_INT_TABLE_VALUE_REQUEST generic use](abap/snippets/F4IF_INT_TABLE_VALUE_REQUEST.abap)
