@@ -6,12 +6,14 @@ Code in snippets folder are samples and are not guaranteed to work by just copyi
 
 ##### Folder structure
 - [abap](abap/)
-  - [programs](abap/programs/)
+  - [programs](abap/programs
   - [snippets](abap/snippets/)
+  - [templates](abap/templates/)
 
 ##### Index
 - ALV
   - [List variant search help for SLIS ALV](abap/snippets/REUSE_ALV_VARIANT_F4.abap)
+  - [SLIS ALV report template with user interaction functionality](abap/templates/slis-alv-report-template)
   
 - Code extraction/download/backup
   - [Program to extract ABAP development objects to html/text files](abap/programs/ydtp_mass_download.abap)
