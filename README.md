@@ -19,3 +19,6 @@ Code in snippets folder are samples and are not guaranteed to work by just copyi
 
 - Search help
   - [F4IF_INT_TABLE_VALUE_REQUEST generic use](abap/snippets/F4IF_INT_TABLE_VALUE_REQUEST.abap)
+
+- Selection screen
+  - [SELECT_OPTIONS_RESTRICT](abap/snippets/SELECT_OPTIONS_RESTRICT.abap)
