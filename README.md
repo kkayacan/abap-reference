@@ -1,6 +1,5 @@
-
 # sap-lib
-Template programs, utility procedures and code samples for ABAP and other SAP development tools
+Template programs, utility procedures and code samples for ABAP and other SAP development tools. Contributions are welcome.
 
 #### Disclaimer
 Code in snippets folder are samples and are not guaranteed to work by just copying and pasting. Adjust it according to your requirement.
@@ -23,6 +22,9 @@ Code in snippets folder are samples and are not guaranteed to work by just copyi
   
 - Message
   - [Message display](abap/snippets/message-display.abap)
+  
+- Popup
+  - [Ask for values with popup](abap/snippets/POPUP_GET_VALUES.abap)
 
 - Search help
   - [F4IF_INT_TABLE_VALUE_REQUEST generic use](abap/snippets/F4IF_INT_TABLE_VALUE_REQUEST.abap)
