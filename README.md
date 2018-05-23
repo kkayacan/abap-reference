@@ -16,6 +16,9 @@ Code in snippets folder are samples and are not guaranteed to work by just copyi
 - Code extraction/download/backup
   - [Program to extract ABAP development objects to html/text files](abap/programs/ydtp_mass_download.abap)
   
+- Data dictionary
+  - [Get domain value text](abap/snippets/get-domain-value-text.abap)
+  
 - Excel
   - [Create native Excel file in background and send as email attachment](abap/snippets/create-excel-bg-and-send-mail.abap)
   
