@@ -38,5 +38,8 @@ Code in snippets folder are samples and are not guaranteed to work by just copyi
 - Selection screen
   - [SELECT_OPTIONS_RESTRICT](abap/snippets/SELECT_OPTIONS_RESTRICT.abap)
   
+- Standard text
+  - [Sample use for SAVE_TEXT](abap/snippets/SAVE_TEXT.abap)
+  
 - String/text
   - [Split single line string into multi line text](abap/snippets/RKD_WORD_WRAP.abap)
