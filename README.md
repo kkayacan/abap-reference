@@ -16,10 +16,10 @@ Code in snippets folder are samples and are not guaranteed to work by just copyi
 ##### Index
 - ALV
   - [List variant search help for SLIS ALV](abap/snippets/REUSE_ALV_VARIANT_F4.abap)
-  - [SLIS ALV report template with user interaction functionality](abap/lib-package/tmplt/slis-alv-report-template/)
+  - [SLIS ALV report template with user interaction functionality](abap/lib-package/tmplt/slisalv/)
   
 - Code extraction/download/backup
-  - [Program to extract ABAP development objects to html/text files](abap/lib-package/prog/mass-download/)
+  - [Program to extract ABAP development objects to html/text files](abap/lib-package/prog/massdownload/)
   
 - Data dictionary
   - [Get domain value text](abap/snippets/get-domain-value-text.abap)
