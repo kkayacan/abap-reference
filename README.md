@@ -6,7 +6,7 @@ Code in snippets folder are samples and are not guaranteed to work by just copyi
 
 ##### Folder structure
 - [abap](abap/)
-  - [programs](abap/programs
+  - [programs](abap/programs/)
   - [snippets](abap/snippets/)
   - [templates](abap/templates/)
 
