@@ -141,7 +141,7 @@ FORM get_report_data.
 ***  PERFORM read_excel_file.
 
 
-  SELECT matnr FROM mara INTO CORRESPONDING FIELDS OF TABLE @it_report.
+  SELECT matnr FROM mara INTO CORRESPONDING FIELDS OF TABLE it_report.
 
 
 

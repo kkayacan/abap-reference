@@ -1,7 +1,7 @@
 # sap-lib
 Template programs, utility procedures and code samples for ABAP and other SAP development tools. Contributions are welcome. 
 
-Templates, programs and classes (abap/lib-package folder) are exported via [abapGit](https://github.com/larshp/abapGit)
+Templates, programs and classes (abap/lib-package folder) are activated in an ABAP 7.50 SP 4 system and exported via [abapGit](https://github.com/larshp/abapGit). Latest release can be imported into an ABAP 7.31 SP 2 system.
 
 #### Disclaimer
 Code in snippets folder are samples and are not guaranteed to work by just copying and pasting. Adjust it according to your requirement.
