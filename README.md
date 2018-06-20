@@ -32,6 +32,9 @@ Code in snippets folder are samples and are not guaranteed to work by just copyi
   - [Get GL account for tax indicator](abap/snippets/FI_TAX_GET_TAX_ACCOUNTS.abap)
   - [Tax calculation](abap/snippets/tax-calculation.abap)
   
+- HR/HCM
+  - [Get active plan variant](abap/snippets/RH_GET_PLVAR.abap)
+  
 - Message
   - [Message display](abap/snippets/message-display.abap)
   
