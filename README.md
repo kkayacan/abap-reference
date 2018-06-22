@@ -15,8 +15,9 @@ Code in snippets folder are samples and are not guaranteed to work by just copyi
 
 ##### Index
 - ALV
-  - [List variant search help for SLIS ALV](abap/snippets/REUSE_ALV_VARIANT_F4.abap)
   - [SLIS ALV report template with user interaction functionality](abap/lib-package/tmplt/slisalv/)
+  - [List variant search help for SLIS ALV](abap/snippets/REUSE_ALV_VARIANT_F4.abap)
+  - [Build LVC field catalog](abap/snippets/build-lvc-fieldcatalog.abap)
   
 - Code extraction/download/backup
   - [Program to extract ABAP development objects to html/text files](abap/lib-package/prog/massdownload/)
