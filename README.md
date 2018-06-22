@@ -6,24 +6,31 @@ Templates, programs and classes (abap/lib-package folder) are activated in an AB
 #### Disclaimer
 Code in snippets folder are samples and are not guaranteed to work by just copying and pasting. Adjust it according to your requirement.
 
-##### Folder structure
+#### Folder structure
 - [abap](abap/)
   - [lib-package](abap/lib-package/) Templates and programs exported via abapGit
     - [prog](abap/lib-package/prog/) Programs
     - [tmplt](abap/lib-package/tmplt/) Templates
   - [snippets](abap/snippets/)
 
-##### Index
+#### Index
+
+##### Programs
+- [Extract ABAP development objects to html/text files](abap/lib-package/prog/massdownload/)
+  
+##### Templates
+- [SLIS ALV report with user interaction functionality](abap/lib-package/tmplt/slisalv/)
+
+##### Snippets
 - ALV
-  - [SLIS ALV report template with user interaction functionality](abap/lib-package/tmplt/slisalv/)
   - [List variant search help for SLIS ALV](abap/snippets/REUSE_ALV_VARIANT_F4.abap)
   - [Build LVC field catalog](abap/snippets/build-lvc-fieldcatalog.abap)
-  
-- Code extraction/download/backup
-  - [Program to extract ABAP development objects to html/text files](abap/lib-package/prog/massdownload/)
-  
+    
 - Data dictionary
   - [Get domain value text](abap/snippets/get-domain-value-text.abap)
+  
+- Dialog/Screen
+  - [Force enter key with SAPGUI_SET_FUNCTIONCODE] (abap/snippets/SAPGUI_SET_FUNCTIONCODE.abap)
   
 - Excel
   - [Create native Excel file in background and send as email attachment](abap/snippets/create-excel-bg-and-send-mail.abap)
