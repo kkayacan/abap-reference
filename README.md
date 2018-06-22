@@ -30,7 +30,7 @@ Code in snippets folder are samples and are not guaranteed to work by just copyi
   - [Get domain value text](abap/snippets/get-domain-value-text.abap)
   
 - Dialog/Screen
-  - [Force enter key with SAPGUI_SET_FUNCTIONCODE] (abap/snippets/SAPGUI_SET_FUNCTIONCODE.abap)
+  - [Force enter key with SAPGUI_SET_FUNCTIONCODE](abap/snippets/SAPGUI_SET_FUNCTIONCODE.abap)
   
 - Excel
   - [Create native Excel file in background and send as email attachment](abap/snippets/create-excel-bg-and-send-mail.abap)
@@ -42,6 +42,7 @@ Code in snippets folder are samples and are not guaranteed to work by just copyi
   
 - HR/HCM
   - [Get active plan variant](abap/snippets/RH_GET_PLVAR.abap)
+  - [Infotype subtype search help](abap/snippets/HR_F4_GET_SUBTYPE.abap)
   
 - Message
   - [Message display](abap/snippets/message-display.abap)
