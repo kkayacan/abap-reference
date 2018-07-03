@@ -29,6 +29,9 @@ Code in snippets folder are samples and are not guaranteed to work by just copyi
 - Data dictionary
   - [Get domain value text](abap/snippets/get-domain-value-text.abap)
   
+- Date
+  - [Find month names](abap/snippets/MONTH_NAMES_GET.abap)
+  
 - Dialog/Screen
   - [Force enter key with SAPGUI_SET_FUNCTIONCODE](abap/snippets/SAPGUI_SET_FUNCTIONCODE.abap)
   
