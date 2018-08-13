@@ -50,7 +50,8 @@ Code in snippets folder are samples and are not guaranteed to work by just copyi
   - [Infotype subtype search help](abap/snippets/HR_F4_GET_SUBTYPE.abap)
   
 - Message
-  - [Message display](abap/snippets/message-display.abap)
+  - [Display BAPIRET2 table](abap/snippets/message-display.abap)
+  - [Convert BDC messages to BAPIRET2](abap/snippets/CONVERT_BDCMSGCOLL_TO_BAPIRET2.abap)
   
 - Popup
   - [Ask for values with popup](abap/snippets/POPUP_GET_VALUES.abap)

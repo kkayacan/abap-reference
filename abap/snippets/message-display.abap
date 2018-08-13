@@ -1,4 +1,5 @@
-*Display BAPIRET2 table
-CALL FUNCTION 'RSCRMBW_DISPLAY_BAPIRET2'
-  TABLES
-    it_return = lt_return.
+DATA t_return TYPE TABLE OF bapiret2.
+
+CALL FUNCTION 'FINB_BAPIRET2_DISPLAY'
+  EXPORTING
+    it_message = t_return.
