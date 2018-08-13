@@ -1,7 +1,7 @@
 # sap-lib
 Template programs, utility procedures and code samples for ABAP and other SAP development tools. Contributions are welcome. 
 
-Templates, programs and classes (abap/lib-package folder) are activated in an ABAP 7.50 SP 4 system and exported via [abapGit](https://github.com/larshp/abapGit). Latest [release](https://github.com/kkayacan/sap-lib/releases) can be imported into an ABAP 7.31 SP 2 system.
+Templates, programs and classes (abap/lib-package folder) are activated in an ABAP 7.50 SP 4 system and exported via [abapGit](https://github.com/larshp/abapGit). Latest [release](https://github.com/kkayacan/sap-lib/releases) can be imported into an ABAP 7.02 SP 8 system.
 
 #### Disclaimer
 Code in snippets folder are samples and are not guaranteed to work by just copying and pasting. Adjust it according to your requirement.
@@ -21,6 +21,7 @@ Code in snippets folder are samples and are not guaranteed to work by just copyi
 ##### Templates
 - [SLIS ALV report with user interaction functionality](abap/lib-package/template/yp_alv_template.prog.abap)
 - [SALV mini template](abap/lib-package/template/yp_salv_mini.prog.abap)
+- [ALV grid in docking container](abap/lib-package/template/yp_docking.prog.abap)
 
 ##### Snippets
 - ALV
