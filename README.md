@@ -11,6 +11,7 @@ Code in snippets folder are samples and are not guaranteed to work by just copyi
   - [lib-package](abap/lib-package/) Templates and programs exported via abapGit
     - [program](abap/lib-package/program/) Programs
     - [template](abap/lib-package/template/) Templates
+  - [objects](abap/objects/) Frequently used standard objects
   - [snippets](abap/snippets/)
 
 #### Index
