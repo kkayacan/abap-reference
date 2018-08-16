@@ -48,7 +48,7 @@ Code in snippets folder are samples and are not guaranteed to work by just copyi
   
 - HR/HCM
   - [Get active plan variant](abap/snippets/RH_GET_PLVAR.abap)
-  - [Infotype subtype search help](abap/snippets/HR_F4_GET_SUBTYPE.abap
+  - [Infotype subtype search help](abap/snippets/HR_F4_GET_SUBTYPE.abap)
   - [Search help function for data with time constraint](abap/snippets/HR_F4HELP_IN_INTERVAL.abap)
   - [Search help function for bank accounts](abap/snippets/HR_BANK_SEARCH.abap)
 
@@ -64,6 +64,9 @@ Code in snippets folder are samples and are not guaranteed to work by just copyi
 
 - Selection screen
   - [SELECT_OPTIONS_RESTRICT](abap/snippets/SELECT_OPTIONS_RESTRICT.abap)
+  
+- Smartforms
+  - [Suppress dialog and download pdf](abap/snippets/suppress-smartforms-dialog-and-download-pdf.abap)
   
 - Standard text
   - [Sample use for SAVE_TEXT](abap/snippets/SAVE_TEXT.abap)
