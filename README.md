@@ -48,8 +48,10 @@ Code in snippets folder are samples and are not guaranteed to work by just copyi
   
 - HR/HCM
   - [Get active plan variant](abap/snippets/RH_GET_PLVAR.abap)
-  - [Infotype subtype search help](abap/snippets/HR_F4_GET_SUBTYPE.abap)
-  
+  - [Infotype subtype search help](abap/snippets/HR_F4_GET_SUBTYPE.abap
+  - [Search help function for data with time constraint](abap/snippets/HR_F4HELP_IN_INTERVAL.abap)
+  - [Search help function for bank accounts](abap/snippets/HR_BANK_SEARCH.abap)
+
 - Message
   - [Display BAPIRET2 table](abap/snippets/message-display.abap)
   - [Convert BDC messages to BAPIRET2](abap/snippets/CONVERT_BDCMSGCOLL_TO_BAPIRET2.abap)
