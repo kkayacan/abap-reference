@@ -25,6 +25,9 @@ Code in snippets folder are samples and are not guaranteed to work by just copyi
 - [ALV grid in docking container](abap/lib-package/template/yp_docking.prog.abap)
 
 ##### Snippets
+- Algorithm
+  - [Parallel cursor](abap/snippets/parallel-cursor.abap)
+  
 - ALV
   - [List variant search help for SLIS ALV](abap/snippets/REUSE_ALV_VARIANT_F4.abap)
   - [Build LVC field catalog](abap/snippets/build-lvc-fieldcatalog.abap)
