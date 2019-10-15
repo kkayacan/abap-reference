@@ -20,7 +20,8 @@ Code in snippets folder are samples and are not guaranteed to work by just copyi
 - [Extract ABAP development objects to html/text files](src/lib-package/program/ydtp_mass_download.prog.abap)
   
 ##### Templates
-- [SLIS ALV report with user interaction functionality](src/lib-package/template/yp_alv_template.prog.abap)
+- [Interactive CL_GUI_ALV_GRID](src/lib-package/template/yp_alv_grid.prog)
+- [Interactive SLIS ALV](src/lib-package/template/yp_alv_template.prog.abap)
 - [SALV mini template](src/lib-package/template/yp_salv_mini.prog.abap)
 - [ALV grid in docking container](src/lib-package/template/yp_docking.prog.abap)
 
