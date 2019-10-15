@@ -4,14 +4,11 @@
   <asx:values>
    <PROGDIR>
     <NAME>YP_ALV_TEMPLATE</NAME>
-    <STATE>A</STATE>
-    <VARCL>X</VARCL>
     <SUBC>1</SUBC>
     <RLOAD>T</RLOAD>
     <FIXPT>X</FIXPT>
     <UCCHECK>X</UCCHECK>
    </PROGDIR>
-   <DYNPROS/>
    <TPOOL>
     <item>
      <ID>R</ID>

@@ -4,8 +4,6 @@
   <asx:values>
    <PROGDIR>
     <NAME>YI_GLOBALALV</NAME>
-    <STATE>A</STATE>
-    <VARCL>X</VARCL>
     <SUBC>I</SUBC>
     <RLOAD>T</RLOAD>
     <UCCHECK>X</UCCHECK>
