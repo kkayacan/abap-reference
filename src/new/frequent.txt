@@ -1,0 +1,31 @@
+﻿Table type
+SOLI_TAB
+SOLIX_TAB
+TRG_DATE
+TRG_CHAR4
+
+Structure
+TAB512
+
+Data element
+CDATE	DATS	8	0	Yaratma tarihi
+CTIME	CHAR	6	0	Bitiş saati
+OBZAE	NUMC	4		Sayaç anahtarı
+AUFUSER7	DATS	8	0	İş başlangıcı
+AUFUSER8	DATS	8	0	İş bitiş tarihi
+BKK_LIGHTCODE	CHAR	1	0	ALV'de ışık ikonu durumu
+GEOLON
+GEOLAT
+
+Message
+00055	Tüm zorunlu alanları doldurun
+SV004	Seçime uygun bir giriş bulunamadı
+
+Table
+E070-E071	Transport request content
+
+Program
+RSSYSCOMP	Batch version comparison
+
+TCODE
+DWDM

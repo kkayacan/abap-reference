@@ -1,0 +1,7 @@
+alv template
+-hide toolbar
+-exclude toolbar functions
+-CANC -> set screen 0
+-controller class
+-no data found
+-build_fcat -> ref_table/ref_field not populating

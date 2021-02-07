@@ -1,0 +1,9 @@
+    CALL FUNCTION 'MOVE_CHAR_TO_NUM'
+      EXPORTING
+        chr             = <ls_str>-menge
+      IMPORTING
+        num             = <ls_excel>-menge
+      EXCEPTIONS
+        convt_no_number = 1
+        convt_overflow  = 2
+        OTHERS          = 3.
