@@ -18,12 +18,15 @@ CLASS lcl_controller DEFINITION.
              statu      TYPE vvis_lights,
              vbeln      TYPE vbap-vbeln,
              posnr      TYPE vbap-posnr,
+             matnr      TYPE vbap-matnr,
+             maktx      TYPE makt-maktx,
              kwmeng     TYPE vbap-kwmeng,
              vrkme      TYPE vbap-vrkme,
              lfimg      TYPE lips-lfimg,
              lfime      TYPE lips-vrkme,
              zztolerans TYPE zsd_118_t001-zztolerans,
              kwmeng_t   TYPE vbap-kwmeng,
+             kwmeng_to  TYPE vbap-kwmeng,
              message    TYPE bapiret2-message,
            END OF st_list.
 
@@ -72,7 +75,8 @@ TABLES: sscrfields, vbak.
 SELECTION-SCREEN FUNCTION KEY 1.
 SELECTION-SCREEN BEGIN OF BLOCK b01 WITH FRAME TITLE TEXT-s01.
 SELECT-OPTIONS: s_auart FOR vbak-auart,
-                s_audat FOR vbak-audat.
+                s_audat FOR vbak-audat,
+                s_vbeln FOR vbak-vbeln.
 SELECTION-SCREEN END OF BLOCK b01.
 
 INITIALIZATION.
@@ -111,18 +115,23 @@ CLASS lcl_controller IMPLEMENTATION.
 
   METHOD start_of_selection.
 
-    SELECT vbap~vbeln, vbap~posnr, vbap~kwmeng, vbap~vrkme, SUM( lips~lfimg ) AS lfimg, lips~vrkme AS lfime
+    SELECT vbap~vbeln, vbap~posnr, vbap~matnr, makt~maktx, vbap~kwmeng, vbap~vrkme,
+           SUM( lips~lfimg ) AS lfimg, lips~vrkme AS lfime
       FROM vbap
       JOIN vbak ON vbak~vbeln = vbap~vbeln
       JOIN lips ON lips~vgbel = vbap~vbeln
                AND lips~vgpos = vbap~posnr
       JOIN likp ON likp~vbeln = lips~vbeln
                AND likp~wbstk = 'C'
+      LEFT OUTER JOIN makt ON makt~matnr = vbap~matnr
+                          AND makt~spras = @sy-langu
       WHERE vbak~audat IN @s_audat
       AND   vbak~auart IN @s_auart
+      AND   vbak~vbeln IN @s_vbeln
+      AND   vbak~vbtyp  = 'C'
       AND   vbap~gbsta <> 'C'
       AND   vbap~sobkz  = @space
-      GROUP BY vbap~vbeln, vbap~posnr, vbap~kwmeng, vbap~vrkme, lips~vrkme
+      GROUP BY vbap~vbeln, vbap~posnr, vbap~matnr, makt~maktx, vbap~kwmeng, vbap~vrkme, lips~vrkme
       INTO CORRESPONDING FIELDS OF TABLE @t_list.
     IF t_list IS INITIAL.
       MESSAGE s004(sv) DISPLAY LIKE 'E'.
@@ -136,10 +145,11 @@ CLASS lcl_controller IMPLEMENTATION.
       LOOP AT lt_tlrn ASSIGNING FIELD-SYMBOL(<ls_tlrn>) WHERE zzkgmik_bas   <= <ls_list>-kwmeng
                                                         AND   zzkgmik_bitis >= <ls_list>-kwmeng.
         <ls_list>-zztolerans = <ls_tlrn>-zztolerans.
-        <ls_list>-kwmeng_t   = <ls_list>-kwmeng * <ls_list>-zztolerans.
+        <ls_list>-kwmeng_t   = <ls_list>-kwmeng * <ls_list>-zztolerans / 100.
+        <ls_list>-kwmeng_to  = <ls_list>-kwmeng - <ls_list>-kwmeng_t.
         EXIT.
       ENDLOOP.
-      IF <ls_list>-kwmeng_t < <ls_list>-lfimg.
+      IF <ls_list>-lfimg < <ls_list>-kwmeng_to.
         DELETE t_list.
         CONTINUE.
       ENDIF.
@@ -315,6 +325,8 @@ CLASS lcl_controller IMPLEMENTATION.
     LOOP AT rt_fcat ASSIGNING <ls_fcat>.
       CASE <ls_fcat>-fieldname.
         WHEN 'KWMENG_T'.
+          <ls_fcat>-scrtext_s = <ls_fcat>-scrtext_m = <ls_fcat>-scrtext_l = <ls_fcat>-coltext = <ls_fcat>-seltext = TEXT-c02.
+        WHEN 'KWMENG_TO'.
           <ls_fcat>-scrtext_s = <ls_fcat>-scrtext_m = <ls_fcat>-scrtext_l = <ls_fcat>-coltext = <ls_fcat>-seltext = TEXT-c01.
       ENDCASE.
     ENDLOOP.
