@@ -16,13 +16,14 @@ PARAMETERS: p_devc TYPE tadir-devclass OBLIGATORY,
             p_lang TYPE sy-langu OBLIGATORY DEFAULT sy-langu,
             p_prog RADIOBUTTON GROUP r01 DEFAULT 'X',
             p_dtel RADIOBUTTON GROUP r01,
-            p_doma RADIOBUTTON GROUP r01.
+            p_doma RADIOBUTTON GROUP r01,
+            p_tran RADIOBUTTON GROUP r01.
 
 START-OF-SELECTION.
 
   CASE abap_true.
     WHEN p_prog.
-      SELECT object, obj_name, CAST( obj_name AS CHAR( 30 ) ) AS rollname
+      SELECT object, obj_name, CAST( obj_name AS CHAR( 30 ) ) AS rollname, CAST( obj_name AS CHAR( 20 ) ) AS tcode
         FROM tadir
         WHERE pgmid = 'R3TR'
         AND   object IN ('CLAS','FUGR','PROG')
@@ -49,7 +50,7 @@ START-OF-SELECTION.
       ENDLOOP.
       ASSIGN gt_pool TO <tab>.
     WHEN p_dtel.
-      SELECT object, obj_name, CAST( obj_name AS CHAR( 30 ) ) AS rollname
+      SELECT object, obj_name, CAST( obj_name AS CHAR( 30 ) ) AS rollname, CAST( obj_name AS CHAR( 20 ) ) AS tcode
         FROM tadir
         WHERE pgmid = 'R3TR'
         AND   object = 'DTEL'
@@ -64,7 +65,7 @@ START-OF-SELECTION.
       ENDIF.
       ASSIGN gt_dd04t TO <tab>.
     WHEN p_doma.
-      SELECT object, obj_name, CAST( obj_name AS CHAR( 30 ) ) AS rollname
+      SELECT object, obj_name, CAST( obj_name AS CHAR( 30 ) ) AS rollname, CAST( obj_name AS CHAR( 20 ) ) AS tcode
         FROM tadir
         WHERE pgmid = 'R3TR'
         AND   object = 'DOMA'
@@ -78,6 +79,21 @@ START-OF-SELECTION.
           INTO TABLE @DATA(gt_dd07t).
       ENDIF.
       ASSIGN gt_dd07t TO <tab>.
+    WHEN p_tran.
+      SELECT object, obj_name, CAST( obj_name AS CHAR( 30 ) ) AS rollname, CAST( obj_name AS CHAR( 20 ) ) AS tcode
+        FROM tadir
+        WHERE pgmid = 'R3TR'
+        AND   object = 'TRAN'
+        AND   devclass = @p_devc
+        INTO TABLE @gt_tadir.
+      IF gt_tadir IS NOT INITIAL.
+        SELECT * FROM tstct
+          FOR ALL ENTRIES IN @gt_tadir
+          WHERE tcode = @gt_tadir-tcode
+          AND   sprsl = @p_lang
+          INTO TABLE @DATA(gt_tstct).
+      ENDIF.
+      ASSIGN gt_tstct TO <tab>.
   ENDCASE.
 
 END-OF-SELECTION.
