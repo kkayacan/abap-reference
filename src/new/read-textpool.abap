@@ -15,7 +15,8 @@ FIELD-SYMBOLS <tab> TYPE STANDARD TABLE.
 PARAMETERS: p_devc TYPE tadir-devclass OBLIGATORY,
             p_lang TYPE sy-langu OBLIGATORY DEFAULT sy-langu,
             p_prog RADIOBUTTON GROUP r01 DEFAULT 'X',
-            p_dtel RADIOBUTTON GROUP r01.
+            p_dtel RADIOBUTTON GROUP r01,
+            p_doma RADIOBUTTON GROUP r01.
 
 START-OF-SELECTION.
 
@@ -62,6 +63,21 @@ START-OF-SELECTION.
           INTO TABLE @DATA(gt_dd04t).
       ENDIF.
       ASSIGN gt_dd04t TO <tab>.
+    WHEN p_doma.
+      SELECT object, obj_name, CAST( obj_name AS CHAR( 30 ) ) AS rollname
+        FROM tadir
+        WHERE pgmid = 'R3TR'
+        AND   object = 'DOMA'
+        AND   devclass = @p_devc
+        INTO TABLE @gt_tadir.
+      IF gt_tadir IS NOT INITIAL.
+        SELECT * FROM dd07t
+          FOR ALL ENTRIES IN @gt_tadir
+          WHERE domname = @gt_tadir-rollname
+          AND   ddlanguage = @p_lang
+          INTO TABLE @DATA(gt_dd07t).
+      ENDIF.
+      ASSIGN gt_dd07t TO <tab>.
   ENDCASE.
 
 END-OF-SELECTION.
