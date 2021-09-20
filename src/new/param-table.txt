@@ -1,0 +1,8 @@
+MANDT	SYMANDT	CLNT	3	0	0	Client ID
+NAME	RVARI_VNAM	CHAR	30	0	0	ABAP: Name of Variant Variable
+TYPE	WLC_RSSCR_KIND	CHAR	1	0	0	Load Control/Ext. Paral. Proc.: Selection Type
+NUMB	TVARV_NUMB	NUMC	4	0	0	ABAP: Current selection number
+SIGN	DDSIGN	CHAR	1	0	0	Type of SIGN component in row type of a Ranges type
+OPTI	DDOPTION	CHAR	2	0	0	Type of OPTION component in row type of a Ranges type
+LOW	RVARI_VAL_255	CHAR	255	0	0	Selection Variants: Field Content (LOW/HIGH)
+HIGH	RVARI_VAL_255	CHAR	255	0	0	Selection Variants: Field Content (LOW/HIGH)
