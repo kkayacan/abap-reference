@@ -20,6 +20,7 @@ GEOLAT
 Message
 00055	Tüm zorunlu alanları doldurun
 SV004	Seçime uygun bir giriş bulunamadı
+SV171   Internal error
 
 Table
 E070-E071	Transport request content
