@@ -54,7 +54,8 @@ METHOD storeproducts_get_entityset.
               iv_msg_v2                 = sy-msgv2
               iv_msg_v3                 = sy-msgv3
               iv_msg_v4                 = sy-msgv4
-              iv_add_to_response_header = abap_true ).
+              iv_add_to_response_header = abap_true
+              iv_message_target         = CONV string( <ls_entity>-product_name ) ).
             EXIT.
           ELSEIF lv_released = abap_false.
             me->/iwbep/if_mgw_conv_srv_runtime~get_message_container( )->add_message(

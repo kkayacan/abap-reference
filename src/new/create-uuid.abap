@@ -1,0 +1,1 @@
+DATA(lv_uuid) = cl_system_uuid=>create_uuid_c32_static( ).
