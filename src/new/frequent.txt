@@ -22,9 +22,11 @@ Message
 00055	Tüm zorunlu alanları doldurun
 SV004	Seçime uygun bir giriş bulunamadı
 SV171   Internal error
+00398   & & & &
 
 Table
 E070-E071	Transport request content
+TVARV       Table of variables in selection criteria
 
 Program
 RSSYSCOMP	Batch version comparison

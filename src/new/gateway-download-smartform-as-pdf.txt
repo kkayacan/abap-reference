@@ -1,0 +1,187 @@
+  METHOD /iwbep/if_mgw_appl_srv_runtime~get_stream.
+    DATA ls_stream  TYPE ty_s_media_resource.
+    DATA(lv_entity_set_name) = io_tech_request_context->get_entity_set_name( ).
+    DATA(lt_keys) = io_tech_request_context->get_keys( ).
+
+    CASE lv_entity_set_name.
+      WHEN 'PrintSet'.
+        DATA: lv_kappl    TYPE kappl,
+              lv_kschl    TYPE na_kschl,
+              lv_belnr    TYPE vbeln,
+              lv_mjahr    TYPE mjahr,
+              lv_filename TYPE so_obj_des.
+        LOOP AT lt_keys ASSIGNING FIELD-SYMBOL(<ls_key>).
+          CASE <ls_key>-name.
+            WHEN 'IV_KAPPL'. lv_kappl = <ls_key>-value.
+            WHEN 'IV_KSCHL'. lv_kschl = <ls_key>-value.
+            WHEN 'IV_BELNR'. lv_belnr = <ls_key>-value.
+            WHEN 'IV_MJAHR'. lv_mjahr = <ls_key>-value.
+          ENDCASE.
+        ENDLOOP.
+        CALL FUNCTION 'Z_GET_PRINTOUT'
+          EXPORTING
+            iv_kappl     = lv_kappl
+            iv_kschl     = lv_kschl
+            iv_belnr     = lv_belnr
+            iv_mjahr     = lv_mjahr
+          IMPORTING
+            ev_value     = ls_stream-value
+            ev_mime_type = ls_stream-mime_type
+            ev_filename  = lv_filename.
+
+
+        DATA ls_lheader TYPE ihttpnvp.
+        lv_filename = escape( val = lv_filename format = cl_abap_format=>e_url ).
+        ls_lheader-name = 'Content-Disposition'.
+        ls_lheader-value = 'outline; filename="' && lv_filename && '";'.
+        set_header( is_header = ls_lheader ).
+
+        copy_data_to_ref( EXPORTING is_data = ls_stream
+                          CHANGING  cr_data = er_stream ).
+
+    ENDCASE.
+  ENDMETHOD.
+
+  ***********************************************************************************
+
+  DATA : gv_job_output TYPE ssfcrescl,
+       gwa_ssfcompop TYPE ssfcompop,
+       gwa_control   TYPE ssfctrlop,
+       gt_otf        TYPE TABLE OF itcoo.
+
+  ***********************************************************************************
+
+  FUNCTION z_get_printout.
+*"----------------------------------------------------------------------
+*"*"Local Interface:
+*"  IMPORTING
+*"     VALUE(IV_KAPPL) TYPE  KAPPL
+*"     VALUE(IV_KSCHL) TYPE  NA_KSCHL
+*"     VALUE(IV_BELNR) TYPE  VBELN
+*"     VALUE(IV_MJAHR) TYPE  MJAHR OPTIONAL
+*"  EXPORTING
+*"     VALUE(EV_VALUE) TYPE  XSTRING
+*"     VALUE(EV_MIME_TYPE) TYPE  STRING
+*"     VALUE(EV_FILENAME) TYPE  SO_OBJ_DES
+*"----------------------------------------------------------------------
+
+  SELECT SINGLE * FROM tnapr
+    WHERE kschl = iv_kschl
+      AND kappl = iv_kappl.
+
+  CASE iv_kappl.
+    WHEN 'V2'.
+      CASE iv_kschl.
+        WHEN 'Z001'.
+          PERFORM print_v2_z001 USING iv_kappl iv_kschl iv_belnr CHANGING ev_filename.
+      ENDCASE.
+    WHEN 'ME'.
+      CASE iv_kschl.
+        WHEN 'ZDSP'.
+      ENDCASE.
+  ENDCASE.
+
+  PERFORM convert_otf_to_xstring CHANGING ev_value.
+
+  DATA lv_mimetype TYPE mimetypes-type.
+  CALL FUNCTION 'SDOK_MIMETYPE_GET'
+    EXPORTING
+      extension = 'PDF'
+    IMPORTING
+      mimetype  = lv_mimetype.
+  ev_mime_type = lv_mimetype.
+
+ENDFUNCTION.
+
+******************************************************************************************
+
+FORM print_v2_z001 USING iv_kappl iv_kschl iv_belnr CHANGING cv_filename.
+  DATA cf_retcode TYPE sy-subrc.
+  DATA: lv_fm_name            TYPE rs38l_fnam.
+  DATA: lv_formname           TYPE tdsfname.
+
+  SELECT SINGLE vbeln FROM lips INTO nast-objky
+    WHERE vgbel = iv_belnr.
+
+  cv_filename = nast-objky && '.pdf'.
+
+  SELECT SINGLE * FROM nast
+    WHERE kappl = iv_kappl
+      AND objky = nast-objky
+      AND kschl = iv_kschl.
+
+* SmartForm from customizing table TNAPR
+  lv_formname = tnapr-sform.
+
+  IF cf_retcode = 0.
+    PERFORM get_data CHANGING cf_retcode.
+  ENDIF.
+
+  IF cf_retcode = 0.
+
+    CALL FUNCTION 'SSF_FUNCTION_MODULE_NAME'
+      EXPORTING
+        formname           = lv_formname
+      IMPORTING
+        fm_name            = lv_fm_name
+      EXCEPTIONS
+        no_form            = 1
+        no_function_module = 2
+        OTHERS             = 3.
+    IF sy-subrc <> 0.
+      MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
+              WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
+    ENDIF.
+
+    gwa_control-langu      = nast-spras.
+    gwa_control-no_dialog  = abap_true.
+    gwa_control-getotf     = abap_true.
+    gwa_ssfcompop-tddest   = 'PDFC'.
+
+    CALL FUNCTION lv_fm_name
+      EXPORTING
+        control_parameters = gwa_control
+        output_options     = gwa_ssfcompop
+        is_header          = gs_header
+        it_items           = gt_items[]
+        is_nast            = nast
+      IMPORTING
+        job_output_info    = gv_job_output
+      EXCEPTIONS
+        formatting_error   = 1
+        internal_error     = 2
+        send_error         = 3
+        user_canceled      = 4
+        OTHERS             = 5.
+
+  ENDIF.
+
+ENDFORM.
+
+************************************************************
+
+FORM convert_otf_to_xstring  CHANGING cv_value TYPE xstring.
+
+  DATA: lt_otf   TYPE TABLE OF itcoo,
+        lv_size  TYPE i,
+        lt_lines TYPE TABLE OF tline.
+
+  APPEND LINES OF gv_job_output-otfdata TO lt_otf.
+
+  CALL FUNCTION 'CONVERT_OTF'
+    EXPORTING
+      format                = 'PDF'
+    IMPORTING
+      bin_filesize          = lv_size
+      bin_file              = cv_value
+    TABLES
+      otf                   = lt_otf
+      lines                 = lt_lines
+    EXCEPTIONS
+      err_max_linewidth     = 1
+      err_format            = 2
+      err_conv_not_possible = 3
+      err_bad_otf           = 4
+      OTHERS                = 5.
+
+ENDFORM.
