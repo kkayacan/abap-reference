@@ -33,7 +33,8 @@
         DATA ls_lheader TYPE ihttpnvp.
         lv_filename = escape( val = lv_filename format = cl_abap_format=>e_url ).
         ls_lheader-name = 'Content-Disposition'.
-        ls_lheader-value = 'outline; filename="' && lv_filename && '";'.
+*        ls_lheader-value = 'outline; filename="' && lv_filename && '";'. "Download
+        ls_lheader-value = 'inline; filename="' && lv_filename && '";'.  "New tab
         set_header( is_header = ls_lheader ).
 
         copy_data_to_ref( EXPORTING is_data = ls_stream
