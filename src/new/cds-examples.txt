@@ -1,0 +1,41 @@
+@AbapCatalog.sqlViewName: 'ZOAA_RSICALCFLAT'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #CHECK
+@EndUserText.label: 'ZOAA_RSICALC01 tablosu R/Y/G yatay'
+define view ZOAA_RSICALC01_FLAT as 
+select from zoaa_rsicalc01 as z
+left outer join dd07t on dd07t.domname = 'ZOAA_D_LEVELCODE'
+                     and dd07t.ddlanguage = $session.system_language
+                     and dd07t.as4local = 'A'
+                     and dd07t.domvalue_l = z.levelcode
+left outer join /oaa/c_chan as c on c.channelid = z.channel {
+z.channel,
+c.description as channel_descr,
+z.levelcode,
+dd07t.ddtext as leveltext,
+z.ext_node_id,
+z.safestock,
+max( case z.rough_stock_value when 'R' then z.quantity_low end ) as R_QUANTITY_LOW,
+max( case z.rough_stock_value when 'R' then z.quantity_high end ) as R_QUANTITY_HIGH,
+max( case z.rough_stock_value when 'Y' then z.quantity_low end ) as Y_QUANTITY_LOW,
+max( case z.rough_stock_value when 'Y' then z.quantity_high end ) as Y_QUANTITY_HIGH,
+max( case z.rough_stock_value when 'G' then z.quantity_low end ) as G_QUANTITY_LOW,
+max( case z.rough_stock_value when 'G' then z.quantity_high end ) as G_QUANTITY_HIGH
+}
+group by z.channel, c.description, z.levelcode, dd07t.ddtext, z.ext_node_id, z.safestock
+
+****************************************************************************************
+
+@AbapCatalog.sqlViewName: 'ZPOSAE_VPRDSATNR'
+@AbapCatalog.compiler.compareFilter: true
+@AccessControl.authorizationCheck: #CHECK
+@EndUserText.label: 'Prod Satnr'
+define view zposae_v_prodsatnr as select from zposae_prodsatnr ( p_client:$session.client ) as a {
+   key a.matnr,
+    a.satnr,
+    a.color,
+    a.maktx,
+    a.spras,
+    case when a.spras = $session.system_language then '1' when a.spras = 'E' then '2' when a.spras = 'T' then '3' else '4' end as lang_order
+} 
