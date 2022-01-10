@@ -17,6 +17,7 @@ AUFUSER8	DATS	8	0	İş bitiş tarihi
 BKK_LIGHTCODE	CHAR	1	0	ALV'de ışık ikonu durumu
 GEOLON
 GEOLAT
+FC_NAME CHAR    30 Ad
 
 Message
 00055	Tüm zorunlu alanları doldurun
