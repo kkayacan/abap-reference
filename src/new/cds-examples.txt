@@ -39,3 +39,209 @@ define view zposae_v_prodsatnr as select from zposae_prodsatnr ( p_client:$sessi
     a.spras,
     case when a.spras = $session.system_language then '1' when a.spras = 'E' then '2' when a.spras = 'T' then '3' else '4' end as lang_order
 } 
+
+****************************************************************************************
+
+@AbapCatalog.sqlViewName: 'ZPAVOMC_PAYMENT'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #CHECK
+@EndUserText.label: 'Pos Payment OData'
+@Analytics.dataCategory: #CUBE
+@OData.publish: true
+@VDM.viewType : #COMPOSITE
+
+define view ZPAOMC_PAYMENT as select from ZPACMC_SALESPAYMENT {
+    @Consumption: { filter: {selectionType: #RANGE, multipleSelections: true, mandatory: false, hidden: false }}
+    @UI: {
+      lineItem: [ { position: 10, label: 'Location'  } ],
+      selectionField: [ { position: 10 }  ],
+      identification:[ { position: 30, label: 'Location'  } ] }
+      @EndUserText.label: 'Location'
+    key location,
+    @Consumption: { filter: {selectionType: #RANGE, multipleSelections: true, mandatory: false, hidden: false }}
+    @UI: {
+      lineItem: [ { position: 10, label: 'Businessday Date'  } ],
+      selectionField: [ { position: 10 }  ],
+      identification:[ { position: 30, label: 'Businessday Date'  } ] }
+      @EndUserText.label: 'Businessday Date'
+    key documentdate,
+    @Consumption: { filter: {selectionType: #RANGE, multipleSelections: true, mandatory: false, hidden: false }}
+    @UI: {
+      lineItem: [ { position: 10, label: 'Billing Document'  } ],
+      selectionField: [ { position: 10 }  ],
+      identification:[ { position: 30, label: 'Billing Document'  } ] }
+      @EndUserText.label: 'Billing Document'
+    key billingdocument,
+    @Consumption: { filter: {selectionType: #RANGE, multipleSelections: true, mandatory: false, hidden: false }}
+    @UI: {
+      lineItem: [ { position: 10, label: 'Transaction Number'  } ],
+      selectionField: [ { position: 10 }  ],
+      identification:[ { position: 30, label: 'Transaction Number'  } ] }
+      @EndUserText.label: 'Transaction Number'
+    key TRANsactionnumber,
+    @Consumption: { filter: {selectionType: #RANGE, multipleSelections: true, mandatory: false, hidden: false }}
+    @UI: {
+      lineItem: [ { position: 10, label: 'Sales Document'  } ],
+      selectionField: [ { position: 10 }  ],
+      identification:[ { position: 30, label: 'Sales Document'  } ] }
+      @EndUserText.label: 'Sales Document'
+    key salesdocument,
+    @UI: {
+      lineItem: [ { position: 10, label: 'Tender Number'  } ],
+      identification:[ { position: 30, label: 'Tender Number'  } ] }
+      @EndUserText.label: 'Tender Number'
+    key tendernumber,
+    @Consumption: { filter: {selectionType: #RANGE, multipleSelections: true, mandatory: false, hidden: false }}
+    @UI: {
+      lineItem: [ { position: 10, label: 'Sales Order Type' } ],
+      selectionField: [ { position: 10 }  ],
+      identification:[ { position: 30, label: 'Sales Order Type'  } ] }
+      @EndUserText.label: 'Sales Order Type'
+    salesordertype,
+    @UI: {
+      lineItem: [ { position: 10, label: 'Location Name'  } ],
+      identification:[ { position: 30, label: 'Location Name' } ] }
+      @EndUserText.label: 'Location Name'
+    locationname,
+    @UI: {
+      lineItem: [ { position: 10, label: 'Selling Store'  } ],
+      identification:[ { position: 30, label: 'Selling Store'  } ] }
+      @EndUserText.label: 'Selling Store'
+    sellingstore,
+    @UI: {
+      lineItem: [ { position: 10, label: 'Selling Store Name' } ],
+      identification:[ { position: 30, label: 'Selling Store Name' } ] }
+      @EndUserText.label: 'Selling Store Name'
+    sellingstorename,
+    @UI: {
+      lineItem: [ { position: 10, label: 'Customer Number'  } ],
+      identification:[ { position: 30, label: 'Customer Number'  } ] }
+      @EndUserText.label: 'Customer Number'
+    customernumber,
+    @UI: {
+      lineItem: [ { position: 10, label: 'Customer Name' } ],
+      identification:[ { position: 30, label: 'Customer Name'  } ] }
+      @EndUserText.label: 'Customer Name'
+    customername,
+    @UI: {
+      lineItem: [ { position: 10, label: 'Customer Surname' } ],
+      identification:[ { position: 30, label: 'Customer Surname'  } ] }
+      @EndUserText.label: 'Customer Surname'
+    customersurname,
+    @UI: {
+      lineItem: [ { position: 10, label: 'Customer Phone' } ],
+      identification:[ { position: 30, label: 'Customer Phone'  } ] }
+      @EndUserText.label: 'Customer Phone'
+    customerphone,
+    @UI: {
+      lineItem: [ { position: 10, label: 'Customer Address' } ],
+      identification:[ { position: 30, label: 'Customer Address'  } ] }
+      @EndUserText.label: 'Customer Address'
+    customeraddress,
+    @UI: {
+      lineItem: [ { position: 10, label: 'Bill To Party' } ],
+      identification:[ { position: 30, label: 'Bill To Party'  } ] }
+      @EndUserText.label: 'Bill To Party'
+    billtoparty,
+    @UI: {
+      lineItem: [ { position: 10, label: 'Bill To Party Name' } ],
+      identification:[ { position: 30, label: 'Bill To Party Name'  } ] }
+      @EndUserText.label: 'Bill To Party Name'
+    billtopartyname,
+    @UI: {
+      lineItem: [ { position: 10, label: 'Ship To Party' } ],
+      identification:[ { position: 30, label: 'Ship To Party'  } ] }
+      @EndUserText.label: 'Ship To Party'
+    shiptoparty,
+    @UI: {
+      lineItem: [ { position: 10, label: 'Ship To Party Name' } ],
+      identification:[ { position: 30, label: 'Ship To Party Name'  } ] }
+      @EndUserText.label: 'Ship To Party Name'
+    shiptopartyname,
+    @UI: {
+      lineItem: [ { position: 10, label: 'Due Date' } ],
+      identification:[ { position: 30, label: 'Due Date'  } ] }
+      @EndUserText.label: 'Due Date'
+    duedate,
+    @UI: {
+      lineItem: [ { position: 10, label: 'Bank Code' } ],
+      identification:[ { position: 30, label: 'Bank Code' } ] }
+      @EndUserText.label: 'Bank Code'
+    bankcode,
+    @UI: {
+      lineItem: [ { position: 10, label: 'Bank Name' } ],
+      identification:[ { position: 30, label: 'Bank Name' } ] }
+      @EndUserText.label: 'Bank Name'
+    bankname,
+    @UI: {
+      lineItem: [ { position: 10, label: 'Workstation ID' } ],
+      identification:[ { position: 30, label: 'Workstation ID' } ] }
+      @EndUserText.label: 'Workstation ID'
+    workstationid,
+    @UI: {
+      lineItem: [ { position: 10, label: 'Operator ID' } ],
+      identification:[ { position: 30, label: 'Operator ID' } ] }
+      @EndUserText.label: 'Operator ID'
+    operatorid,
+    @UI: {
+      lineItem: [ { position: 10, label: 'Tender ID' } ],
+      identification:[ { position: 30, label: 'Tender ID' } ] }
+      @EndUserText.label: 'Tender ID'
+    tenderid,
+    @UI: {
+      lineItem: [ { position: 10, label: 'Control Count' } ],
+      identification:[ { position: 30, label: 'Control Count' } ] }
+      @EndUserText.label: 'Control Count'
+    controlcount,
+    @UI: {
+      lineItem: [ { position: 10, label: 'Account' } ],
+      identification:[ { position: 30, label: 'Account' } ] }
+      @EndUserText.label: 'Account'
+    account,
+    @UI: {
+      lineItem: [ { position: 10, label: 'Tender Type Code' } ],
+      identification:[ { position: 30, label: 'Tender Type Code' } ] }
+      @EndUserText.label: 'Tender Type Code'
+    tendertypecode,
+    @Semantics.amount.currencyCode: 'TenderCurrency'
+    @DefaultAggregation: #SUM
+    @UI: {
+      lineItem: [ { position: 10, label: 'Payment Amount' } ],
+      identification:[ { position: 30, label: 'Payment Amount' } ] }
+      @EndUserText.label: 'Payment Amount'
+    tenderamount,
+    @Semantics.currencyCode: true
+    @Consumption: { filter: {selectionType: #RANGE, multipleSelections: true, mandatory: false, hidden: false }}
+    @UI: {
+      lineItem: [ { position: 10, label: 'Tender Currency'  } ],
+      selectionField: [ { position: 10 }  ],
+      identification:[ { position: 30, label: 'Tender Currency'  } ] }
+      @EndUserText.label: 'Tender Currency'
+    tendercurrency,
+    @UI: {
+      lineItem: [ { position: 10, label: 'Gift Card' } ],
+      identification:[ { position: 30, label: 'Gift Card' } ] }
+      @EndUserText.label: 'Gift Card'
+    giftcard,
+    @UI: {
+      lineItem: [ { position: 10, label: 'Credit Check' } ],
+      identification:[ { position: 30, label: 'Credit Check' } ] }
+      @EndUserText.label: 'Credit Check'
+    creditcheck,
+    @UI: {
+      lineItem: [ { position: 10, label: 'Cash' } ],
+      identification:[ { position: 30, label: 'Cash' } ] }
+      @EndUserText.label: 'Cash'
+    cash,
+    @UI: {
+      lineItem: [ { position: 10, label: 'Change' } ],
+      identification:[ { position: 30, label: 'Change' } ] }
+      @EndUserText.label: 'Change'
+    change,
+    @UI: {
+      lineItem: [ { position: 10, label: 'Payment Descripton' } ],
+      identification:[ { position: 30, label: 'Payment Descripton' } ] }
+      @EndUserText.label: 'Payment Descripton'
+    paymentdesc
+}
