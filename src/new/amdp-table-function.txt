@@ -1,0 +1,60 @@
+class zcl_amdp_posaggattrib definition
+  public
+  final
+  create public .
+
+public section.
+
+  interfaces IF_AMDP_MARKER_HDB .
+
+  class-methods GET_ATTR
+    for table function ZTF_POSAGGATTRIB .
+  PROTECTED SECTION.
+  PRIVATE SECTION.
+ENDCLASS.
+
+
+
+CLASS zcl_amdp_posaggattrib IMPLEMENTATION.
+
+
+  METHOD GET_ATTR BY DATABASE FUNCTION FOR HDB LANGUAGE SQLSCRIPT
+                                        OPTIONS READ-ONLY .
+
+      return select "SAPClient" as SAPCLIENT,
+                    "RetailStoreID" as RETAILSTOREID,
+                    "BusinessDayDate" as BUSINESSDAYDATE,
+                    "TransactionIndex" as TRANSACTIONINDEX,
+                    "TransactionNumber" as TRANSACTIONNUMBER,
+                    "ItemID" as ITEMID,
+                    "Article" as ARTICLE
+              from "PUBLIC"."SAPBW::ECV_POSAGGREGATEDATTRIBUTE"
+        where "SAPClient" = :p_client;
+
+  ENDMETHOD.
+
+
+ENDCLASS.
+
+*************************************************************************
+
+@AccessControl.authorizationCheck: #CHECK
+@EndUserText.label: 'POS aggregated attribute'
+define table function ZTF_POSAGGATTRIB 
+with parameters @Environment.systemField: #CLIENT
+                p_client:abap.clnt
+returns {
+    SAPClient: mandt;
+    RETAILSTOREID: CHAR10;
+    BUSINESSDAYDATE: DATUM;
+    TRANSACTIONINDEX: INT4;
+    TRANSACTIONNUMBER: CHAR20;
+    ITEMID: CHAR18;
+    ARTICLE: CHAR18;
+}
+
+implemented by method zcl_amdp_posaggattrib=>GET_ATTR
+
+***************************************************************************
+
+SELECT * FROM ztf_posaggattrib INTO TABLE @DATA(t_attr) UP TO 100 ROWS.
