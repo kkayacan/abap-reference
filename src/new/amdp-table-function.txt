@@ -42,7 +42,9 @@ ENDCLASS.
 @EndUserText.label: 'POS aggregated attribute'
 define table function ZTF_POSAGGATTRIB 
 with parameters @Environment.systemField: #CLIENT
-                p_client:abap.clnt
+                p_client:abap.clnt,
+                p_store:char10,
+                p_date:datum
 returns {
     SAPClient: mandt;
     RETAILSTOREID: CHAR10;
@@ -57,4 +59,6 @@ implemented by method zcl_amdp_posaggattrib=>GET_ATTR
 
 ***************************************************************************
 
-SELECT * FROM ztf_posaggattrib INTO TABLE @DATA(t_attr) UP TO 100 ROWS.
+SELECT * FROM ztf_posaggattrib( p_store = '0000001119', p_date  = '20220211' )
+  INTO TABLE @DATA(t_attr) UP TO 100 ROWS
+  ##db_feature_mode[amdp_table_function].
