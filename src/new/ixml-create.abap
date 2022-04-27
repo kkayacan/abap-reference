@@ -144,7 +144,7 @@ FORM create_xml_string USING io_renderer TYPE REF TO if_ixml_renderer
 
   DATA lo_conv TYPE REF TO cl_abap_conv_in_ce.
 
-  lo_renderer->render( ).
+  io_renderer->render( ).
 
 **--convert xstring to string
   lo_conv = cl_abap_conv_in_ce=>create( encoding    = 'UTF-8'
