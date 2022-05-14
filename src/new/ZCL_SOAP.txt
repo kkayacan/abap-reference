@@ -1,0 +1,430 @@
+***** NOT TESTED ****
+
+class ZCL_SOAP definition
+  public
+  create public .
+
+public section.
+
+  class-methods REQUEST
+    importing
+      !IP_PROTOCOL type STRING default 'https'
+      !IP_HOST type STRING
+      !IP_ENDPOINT type STRING
+      !IP_SOAPACTION type STRING
+      !IP_PROXY_HOST type STRING optional
+      !IP_PROXY_PORT type STRING optional
+      !IP_BODY type STRING
+    returning
+      value(RESPONSE) type STRING
+    raising
+      ZCX_HTTP .
+protected section.
+private section.
+ENDCLASS.
+
+
+
+CLASS ZCL_SOAP IMPLEMENTATION.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Static Public Method ZCL_SOAP=>REQUEST
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IP_PROTOCOL                    TYPE        STRING (default ='https')
+* | [--->] IP_HOST                        TYPE        STRING
+* | [--->] IP_ENDPOINT                    TYPE        STRING
+* | [--->] IP_SOAPACTION                  TYPE        STRING
+* | [--->] IP_PROXY_HOST                  TYPE        STRING(optional)
+* | [--->] IP_PROXY_PORT                  TYPE        STRING(optional)
+* | [--->] IP_BODY                        TYPE        STRING
+* | [<-()] RESPONSE                       TYPE        STRING
+* | [!CX!] ZCX_HTTP
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+METHOD request.
+
+  DATA: lo_client TYPE REF TO if_http_client,
+        lv_exc    TYPE string.
+
+  CALL METHOD cl_http_client=>create_by_url
+    EXPORTING
+      url                = ip_protocol && `://` && ip_host && ip_endpoint
+      proxy_host         = ip_proxy_host
+      proxy_service      = ip_proxy_port
+    IMPORTING
+      client             = lo_client
+    EXCEPTIONS
+      argument_not_found = 1
+      plugin_not_active  = 2
+      internal_error     = 3
+      OTHERS             = 4.
+  IF sy-subrc <> 0.
+    RAISE EXCEPTION TYPE zcx_http
+      MESSAGE ID 'ZRETAIL_EBA' TYPE 'E' NUMBER 001 WITH 'create_by_url' '' '' ''.
+  ENDIF.
+
+  lo_client->request->set_method( if_http_request=>co_request_method_post ).
+
+  lo_client->request->set_header_field( name  = 'User-Agent'
+                                        value = 'SAP NetWeaver Application Server (1.0;750)' ).
+  lo_client->request->set_header_field( name  = 'Accept'
+                                        value = '*/*' ).
+  lo_client->request->set_header_field( name  = 'Host'
+                                        value = ip_host ).
+  lo_client->request->set_header_field( name  = 'Accept-Encoding'
+                                        value = 'gzip, deflate, br' ).
+  lo_client->request->set_header_field( name  = 'Connection'
+*                                        value = 'keep-alive' ).
+                                        value = 'close' ).
+  lo_client->request->set_header_field( name  = 'content-type'
+                                        value = 'text/xml; charset=utf-8' ).
+  lo_client->request->set_header_field( name  = 'SOAPAction'
+                                        value = ip_soapaction ).
+
+*  DATA(lv_length) = strlen( ip_body ).
+*
+*  lo_client->request->set_header_field( name  = 'Content-Length'
+*                                        value = condense( CONV string( lv_length ) ) ).
+
+  lo_client->request->set_cdata( data   = ip_body
+*                                 offset = 0
+*                                 length = lv_length
+                                 ).
+
+  lo_client->send(
+    EXCEPTIONS
+      http_communication_failure = 1
+      http_invalid_state         = 2
+      http_processing_failed     = 3
+      http_invalid_timeout       = 4
+      OTHERS                     = 5 ).
+  IF sy-subrc <> 0.
+    RAISE EXCEPTION TYPE zcx_http
+      MESSAGE ID 'ZRETAIL_EBA' TYPE 'E' NUMBER 001 WITH 'send' '' '' ''.
+  ENDIF.
+
+  lo_client->receive(
+    EXCEPTIONS
+      http_communication_failure = 1
+      http_invalid_state         = 2
+      http_processing_failed     = 3
+      OTHERS                     = 4 ).
+  IF sy-subrc <> 0.
+    DATA lv_code           TYPE sysubrc.
+    DATA lv_message        TYPE string.
+    DATA lv_message_class  TYPE arbgb.
+    DATA lv_message_number TYPE msgnr.
+    lo_client->get_last_error(
+      IMPORTING
+        code           = lv_code
+        message        = lv_message
+        message_class  = lv_message_class
+        message_number = lv_message_number ).
+    DATA(ls_msg) = zcl_string=>to_bapiret2( lv_message ).
+    RAISE EXCEPTION TYPE zcx_http
+      MESSAGE ID 'ZRETAIL_EBA' TYPE 'E' NUMBER 000 WITH ls_msg-message_v1 ls_msg-message_v2
+      ls_msg-message_v3 ls_msg-message_v4.
+  ENDIF.
+
+*  DATA(lv_xstring) = lo_client->response->get_data( ).
+  response = lo_client->response->get_cdata( ).
+
+  lo_client->close( ).
+
+ENDMETHOD.
+ENDCLASS.
+
+**********************************************************
+REPORT y.
+
+DATA: lo_document TYPE REF TO if_ixml_document,
+      lo_renderer TYPE REF TO if_ixml_renderer,
+      lv_xml      TYPE xstring,
+      lv_doc      TYPE string.
+
+PERFORM init_dom CHANGING lo_document lo_renderer lv_xml.
+PERFORM build_dom USING lo_document.
+PERFORM create_xml_string USING lo_renderer CHANGING lv_doc.
+
+PERFORM call_api.
+*PERFORM parse_response.
+
+FORM init_dom CHANGING eo_document TYPE REF TO if_ixml_document
+                       eo_renderer TYPE REF TO if_ixml_renderer
+                       ev_xml      TYPE xstring.
+
+  DATA: lo_ixml           TYPE REF TO if_ixml,
+        lo_stream_factory TYPE REF TO if_ixml_stream_factory,
+        lo_ostream        TYPE REF TO if_ixml_ostream,
+        lo_encoding       TYPE REF TO if_ixml_encoding.
+
+**-- Create the Main Factory
+  lo_ixml = cl_ixml=>create( ).
+
+**-- Create the Initial Document
+  eo_document = lo_ixml->create_document( ).
+
+**-- Create an Output Stream
+  lo_stream_factory = lo_ixml->create_stream_factory( ).
+  lo_ostream = lo_stream_factory->create_ostream_xstring( string = ev_xml ).
+
+**-- Create an Encoding
+  lo_encoding = lo_ixml->create_encoding( byte_order    = if_ixml_encoding=>co_none
+                                          character_set = 'UTF-8' ).
+
+**-- Set the Encoding
+  lo_ostream->set_encoding( encoding = lo_encoding ).
+
+* Set Pretty Print
+*  lo_ostream->set_pretty_print( pretty_print = abap_true ).
+
+**-- Create a Renderer
+  eo_renderer = lo_ixml->create_renderer( document = eo_document
+                                          ostream  = lo_ostream ).
+
+ENDFORM.
+
+FORM build_dom USING io_doc TYPE REF TO if_ixml_document.
+
+  DATA: lo_element            TYPE REF TO if_ixml_element,
+        lo_start_process      TYPE REF TO if_ixml_element,
+        lo_parameters         TYPE REF TO if_ixml_element,
+        lo_process_parameters TYPE REF TO if_ixml_element,
+        lo_workflow_parameter TYPE REF TO if_ixml_element.
+
+
+  lo_element = io_doc->create_simple_element_ns( name   = 'Envelope'
+                                                 parent = io_doc
+                                                 prefix = 'soap' ).
+  lo_element->set_attribute_ns( name   = 'xsi'
+                                prefix = 'xmlns'
+                                value  = 'http://www.w3.org/2001/XMLSchema-instance' ).
+  lo_element->set_attribute_ns( name   = 'xsd'
+                                prefix = 'xmlns'
+                                value  = 'http://www.w3.org/2001/XMLSchema' ).
+  lo_element->set_attribute_ns( name   = 'soap'
+                                prefix = 'xmlns'
+                                value  = 'http://schemas.xmlsoap.org/soap/envelope/' ).
+
+  lo_element = io_doc->create_simple_element_ns( name   = 'Body'
+                                                 parent = lo_element
+                                                 prefix = 'soap' ).
+
+  lo_element = io_doc->create_simple_element_ns( name   = 'StartProcess'
+                                                 parent = lo_element ).
+  lo_element->set_attribute_ns( name   = 'xmlns'
+                                value  = 'http://tempuri.org/' ).
+
+  lo_start_process = io_doc->create_simple_element_ns( name   = 'StartProcess'
+                                                       parent = lo_element ).
+
+  lo_element = io_doc->create_simple_element_ns( name   = 'user'
+                                                 parent = lo_start_process
+                                                 value  = 'username' ).
+
+  lo_element = io_doc->create_simple_element_ns( name   = 'password'
+                                                 parent = lo_start_process
+                                                 value  = 'XXXXXXXX' ).
+
+  lo_element = io_doc->create_simple_element_ns( name   = 'targetUser'
+                                                 parent = lo_start_process
+                                                 value  = 'username' ).
+
+  lo_element = io_doc->create_simple_element_ns( name   = 'language'
+                                                 parent = lo_start_process
+                                                 value  = 'Turkish' ).
+
+  lo_parameters = io_doc->create_simple_element_ns( name   = 'parameters'
+                                                    parent = lo_start_process ).
+
+  lo_process_parameters = io_doc->create_simple_element_ns( name   = 'ProcessParameters'
+                                                            parent = lo_parameters ).
+
+  lo_workflow_parameter = io_doc->create_simple_element_ns( name   = 'WorkflowParameter'
+                                                            parent = lo_process_parameters ).
+
+  lo_element = io_doc->create_simple_element_ns( name   = 'Name'
+                                                 parent = lo_workflow_parameter
+                                                 value  = 'vrbJsonMetin1' ).
+
+  lo_element = io_doc->create_simple_element_ns( name   = 'Value'
+                                                 parent = lo_workflow_parameter
+                                                 value  = '{"BELNR": "4500104971"}' ).
+
+  lo_workflow_parameter = io_doc->create_simple_element_ns( name   = 'WorkflowParameter'
+                                                            parent = lo_process_parameters ).
+
+  lo_element = io_doc->create_simple_element_ns( name   = 'Name'
+                                                 parent = lo_workflow_parameter
+                                                 value  = 'vrbJsonMetin2' ).
+
+  lo_element = io_doc->create_simple_element_ns( name   = 'Value'
+                                                 parent = lo_workflow_parameter
+                                                 value  = '{"KTEXT": "CHIVAS REGAL 12Y 40% 1L"}' ).
+
+  lo_workflow_parameter = io_doc->create_simple_element_ns( name   = 'WorkflowParameter'
+                                                            parent = lo_process_parameters ).
+
+  lo_element = io_doc->create_simple_element_ns( name   = 'Name'
+                                                 parent = lo_workflow_parameter
+                                                 value  = 'vrbJsonMetin3' ).
+
+  lo_element = io_doc->create_simple_element_ns( name   = 'Value'
+                                                 parent = lo_workflow_parameter
+                                                 value  = '{"LGORT": "3001"}' ).
+
+  lo_element = io_doc->create_simple_element_ns( name   = 'Process'
+                                                 parent = lo_parameters
+                                                 value  = 'TedarikciSiparisTakipSureci' ).
+
+
+
+ENDFORM.
+
+FORM create_xml_string USING io_renderer TYPE REF TO if_ixml_renderer
+                    CHANGING ev_doc TYPE string.
+
+  DATA lo_conv TYPE REF TO cl_abap_conv_in_ce.
+
+  lo_renderer->render( ).
+
+**--convert xstring to string
+  lo_conv = cl_abap_conv_in_ce=>create( encoding    = 'UTF-8'
+*                                        endian      = 'L'
+                                        ignore_cerr = 'X'
+                                        replacement = '?'
+                                        input       = lv_xml ).
+
+  lo_conv->read( IMPORTING data = ev_doc ).
+
+ENDFORM.
+
+******************************************************************
+
+*<?xml version="1.0" encoding="utf-8"?>
+*<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+*  <soap:Body>
+*    <StartProcess xmlns="http://tempuri.org/">
+*      <user>sapuser</user>
+*      <password>Sap183897</password>
+*      <targetUser>sapuser</targetUser>
+*      <language>Turkish</language>
+*      <parameters>
+*        <ProcessParameters>
+*          <WorkflowParameter>
+*            <Name>vrbJsonMetin1</Name>
+*            <Value>{"BELNR": "4500104971"}</Value>
+*          </WorkflowParameter>
+*          <WorkflowParameter>
+*            <Name>vrbJsonMetin2</Name>
+*            <Value>{"KTEXT": "CHIVAS REGAL 12Y 40% 1L"}</Value>
+*          </WorkflowParameter>
+*          <WorkflowParameter>
+*            <Name>vrbJsonMetin3</Name>
+*            <Value>{"LGORT": "3001"}</Value>
+*          </WorkflowParameter>
+*        </ProcessParameters>
+*        <Process>TedarikciSiparisTakipSureci</Process>
+*      </parameters>
+*    </StartProcess>
+*  </soap:Body>
+*</soap:Envelope>
+
+FORM call_api.
+
+  DATA lv_response TYPE string.
+
+  TRY.
+      lv_response = zcl_soap=>request( ip_host       = 'api.example.com'
+                                       ip_endpoint   = `/ws/endpoint.asmx`
+                                       ip_soapaction = `http://tempuri.org/StartProcess`
+                                       ip_body       = lv_doc ).
+    CATCH zcx_http INTO DATA(lr_http).
+      BREAK-POINT.
+  ENDTRY.
+  BREAK-POINT.
+ENDFORM.
+
+*<?xml version="1.0" encoding="utf-8"?>
+*<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+*    <soap:Body>
+*        <StartProcessResponse xmlns="http://tempuri.org/">
+*            <StartProcessResult>
+*                <ProcessId>2832</ProcessId>
+*                <CreateDate>2022-04-13T15:36:19.663</CreateDate>
+*                <CreatorUser>sapuser</CreatorUser>
+*                <FinishDate>0001-01-01T00:00:00</FinishDate>
+*                <Finished>false</Finished>
+*                <Name>TedarikciSiparisTakipSureci</Name>
+*                <Status>
+*                    <Id>1</Id>
+*                    <Description>Başlat</Description>
+*                    <Icon>started.png</Icon>
+*                </Status>
+*            </StartProcessResult>
+*        </StartProcessResponse>
+*    </soap:Body>
+*</soap:Envelope>
+
+FORM parse_response.
+
+DATA lv_response TYPE string.
+DATA xml TYPE xstring.
+
+lv_response =
+`<?xml version="1.0" encoding="utf-8"?>` &&
+`<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">` &&
+    `<soap:Body>` &&
+        `<StartProcessResponse xmlns="http://tempuri.org/">` &&
+            `<StartProcessResult>` &&
+                `<ProcessId>2832</ProcessId>` &&
+                `<CreateDate>2022-04-13T15:36:19.663</CreateDate>` &&
+                `<CreatorUser>sapuser</CreatorUser>` &&
+                `<FinishDate>0001-01-01T00:00:00</FinishDate>` &&
+                `<Finished>false</Finished>` &&
+                `<Name>TedarikciSiparisTakipSureci</Name>` &&
+                `<Status>` &&
+                    `<Id>1</Id>` &&
+                    `<Description>Başlat</Description>` &&
+                    `<Icon>started.png</Icon>` &&
+                `</Status>` &&
+            `</StartProcessResult>` &&
+        `</StartProcessResponse>` &&
+    `</soap:Body>` &&
+`</soap:Envelope>`.
+
+    DATA(ixml)           = cl_ixml=>create( ).
+    DATA(stream_factory) = ixml->create_stream_factory( ).
+
+    DATA(istream)        = stream_factory->create_istream_string( lv_response ).
+
+    DATA(document)       = ixml->create_document( ).
+    DATA(parser)         = ixml->create_parser(
+                             stream_factory = stream_factory
+                             istream        = istream
+                             document       = document ).
+
+    DATA(rc) = parser->parse( ).
+
+    IF rc <> ixml_mr_parser_ok.
+      ... "Error handling
+      RETURN.
+    ENDIF.
+
+    DATA(nodes) = document->get_root_element( )->get_children( ).
+    DATA(iterator) = nodes->create_iterator( ).
+
+    DO.
+      DATA(node) = iterator->get_next( ).
+      IF node IS INITIAL.
+        EXIT.
+      ENDIF.
+      DATA(name) = node->get_name( ).
+      DATA(value) = node->get_value( ).
+      cl_demo_output=>write_text( |{ node->get_name( ) } | &&
+                                  |{ node->get_value( ) }| ).
+    ENDDO.
+
+    cl_demo_output=>display( ).
+
+endform.
