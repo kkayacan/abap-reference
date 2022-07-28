@@ -5,6 +5,7 @@ TRG_DATE
 TRG_CHAR4
 WRF_MAKTX_RTTY
 WDY_KEY_VALUE_LIST  Standard list of key/value relationships as strings
+WDFR_MATKL_RANG_TYP Material group range
 
 Structure
 TAB512
