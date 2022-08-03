@@ -8,17 +8,11 @@ FUNCTION zrt_f_get_mb52_data.
 *"  EXPORTING
 *"     REFERENCE(EV_LABST) TYPE  MARD-LABST
 *"     REFERENCE(EV_SALK3) TYPE  SALK3
+*"     REFERENCE(ET_LIST) TYPE  ZRTT_MB52
 *"----------------------------------------------------------------------
 
-  DATA: ltr_werks TYPE RANGE OF mard-werks,
-        ltr_lgort TYPE RANGE OF mard-lgort,
-        ltr_matkl TYPE RANGE OF mara-matkl.
   DATA lo_result TYPE REF TO data.
   FIELD-SYMBOLS <lt_result> TYPE ANY TABLE.
-
-  ltr_werks = VALUE #( ( sign = 'I' option = 'EQ' low = '1001' ) ).
-  ltr_lgort = VALUE #( ( sign = 'I' option = 'EQ' low = '1001' ) ).
-  ltr_matkl = VALUE #( ( sign = 'I' option = 'EQ' low = '100000' ) ).
 
   cl_salv_bs_runtime_info=>set(
       display        = abap_false
@@ -26,11 +20,13 @@ FUNCTION zrt_f_get_mb52_data.
       data           = abap_true ).
 
   SUBMIT rm07mlbs
-    WITH werks  IN ltr_werks
-    WITH lgort  IN ltr_lgort
-    WITH matkla IN ltr_matkl
-    WITH pa_hsq EQ abap_false
-    WITH pa_flt EQ abap_true
+    WITH werks  IN itr_werks
+    WITH lgort  IN itr_lgort
+    WITH matkla IN itr_matkl
+    WITH nozero   EQ abap_true
+    WITH novalues EQ abap_false
+    WITH pa_hsq   EQ abap_false
+    WITH pa_flt   EQ abap_true
     AND RETURN.
 
   TRY.
@@ -40,8 +36,12 @@ FUNCTION zrt_f_get_mb52_data.
     CATCH cx_salv_bs_sc_runtime_info .
   ENDTRY.
   ASSIGN lo_result->* TO <lt_result>.
-
+  IF <lt_result> IS NOT ASSIGNED.
+    RETURN.
+  ENDIF.
   LOOP AT <lt_result> ASSIGNING FIELD-SYMBOL(<ls_result>).
+    APPEND INITIAL LINE TO et_list ASSIGNING FIELD-SYMBOL(<ls_list>).
+    MOVE-CORRESPONDING <ls_result> to <ls_list>.
     ASSIGN COMPONENT 'LABST' OF STRUCTURE <ls_result> TO FIELD-SYMBOL(<lv_value>).
     IF sy-subrc = 0.
       ADD <lv_value> TO ev_labst.
