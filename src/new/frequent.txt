@@ -26,6 +26,25 @@ Message
 SV004	Seçime uygun bir giriş bulunamadı
 SV171   Internal error
 00398   & & & &
+SV004   Seçime uygun bir giriş bulunamadı 
+00055   Tüm zorunlu alanları doldurun 
+SV018   Veriler saklandı 
+SV043   Veriler saklanmıştı 
+DB000   & & & & 
+SV026   İşlevi yürütmeden önce girişleri seç 
+DB650   Alt sınır üst sınırdan büyük 
+00382   Toplu giriş işlemesi sona erdi 
+00517   İş tamamlandı 
+FES016  Dosyanın yazılması sırasında hata. 
+0K004   İmleci listedeki bir satıra konumlayın 
+0K006   Asgari bir giriş seçiniz 
+0K007   Son değer ilk değerden küçük 
+BT676   İstisna ortaya çıktı (function = &1; sy-subrc = &2) 
+NR401   İşlem yürütülemez 
+01246   Sistem izin verseydi blokajlar kaldırılırdı 
+FL060   Saved 
+
+
 
 Table
 E070-E071	Transport request content
