@@ -55,3 +55,6 @@ RSSYSCOMP	Batch version comparison
 
 TCODE
 DWDM
+
+FM
+POPUP_CONTINUE_YES_NO
