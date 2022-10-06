@@ -26,8 +26,6 @@ Message
 SV004	Seçime uygun bir giriş bulunamadı
 SV171   Internal error
 00398   & & & &
-SV004   Seçime uygun bir giriş bulunamadı 
-00055   Tüm zorunlu alanları doldurun 
 SV018   Veriler saklandı 
 SV043   Veriler saklanmıştı 
 DB000   & & & & 
