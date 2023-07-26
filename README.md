@@ -14,6 +14,8 @@ Code in snippets folder are samples and are not guaranteed to work by just copyi
   - [objects](src/objects/) Frequently used standard objects
   - [snippets](src/snippets/)
 
+### Also check [uncategorized new additions](/src/new/)
+
 ### Index
 
 ##### Programs
