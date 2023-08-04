@@ -5,6 +5,7 @@ class ZCL_HTTP definition
 public section.
 
   class-data MESSAGE type STRING read-only .
+  class-data LONG_MESSAGE type STRING read-only .
 
   type-pools ABAP .
 *    raising
@@ -129,6 +130,7 @@ METHOD request.
     ENDLOOP.
     lv_content_length = lv_content_length + lines( it_form ) * 2 - 1.
   ELSEIF ip_file IS NOT INITIAL.
+    lo_client->propertytype_logon_popup = 0.
     DATA: lo_rest_client    TYPE REF TO cl_rest_http_client,
           lo_upload_request TYPE REF TO if_rest_entity,
           lo_form_data      TYPE REF TO cl_rest_multipart_form_data.
@@ -192,13 +194,19 @@ METHOD request.
       RETURN.
     ENDIF.
 
-*  DATA(lv_xstring) = lo_client->response->get_data( ).
     response = lo_client->response->get_cdata( ).
 
     lo_client->close( ).
 
   ELSE.
-    lo_rest_client->if_rest_client~post( lo_upload_request ).
+    DATA lx_rest_client TYPE REF TO cx_rest_client_exception.
+    TRY.
+        lo_rest_client->if_rest_client~post( lo_upload_request ).
+      CATCH cx_rest_client_exception INTO lx_rest_client.
+        message = lx_rest_client->get_text( ).
+        long_message = lx_rest_client->get_longtext( ).
+        RETURN.
+    ENDTRY.
     DATA lv_status TYPE i.
     lv_status = lo_rest_client->if_rest_client~get_status( ).
     response = lo_rest_client->if_rest_client~get_response_entity( )->get_string_data( ).
