@@ -120,8 +120,7 @@ METHOD request.
     lo_client->request->set_cdata( ip_body ).
     lv_content_length = strlen( ip_body ).
   ELSEIF it_form IS NOT INITIAL AND ip_multipart = abap_false.
-    lo_client->request->set_header_field( name  = 'content-type'
-                                          value = 'application/x-www-form-urlencoded' ).
+    lo_client->request->set_content_type( content_type = if_rest_media_type=>gc_appl_www_form_url_encoded ).
     LOOP AT it_form ASSIGNING <ls_form>.
       lv_content_length = lv_content_length + strlen( <ls_form>-key ).
       lv_content_length = lv_content_length + strlen( <ls_form>-value ).
@@ -142,6 +141,8 @@ METHOD request.
     CREATE OBJECT lo_form_data.
     lo_form_data->set_file( iv_name = 'file' iv_filename = ip_file_name iv_type = 'application/octet-stream' iv_data = ip_file ).
     lo_form_data->write_to( lo_upload_request ).
+  ELSE.
+    lo_client->request->set_content_type( content_type = if_rest_media_type=>gc_all ).
   ENDIF.
 
   IF ip_send_length = abap_true.
