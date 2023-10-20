@@ -1,3 +1,42 @@
+METHOD create_result_table.
+
+  DATA: lt_dfies       TYPE TABLE OF dfies,
+        lt_comp        TYPE cl_abap_structdescr=>component_table,
+        lo_structdescr TYPE REF TO cl_abap_structdescr.
+
+  CALL FUNCTION 'DDIF_FIELDINFO_GET'
+    EXPORTING
+      tabname        = iv_tabname
+    TABLES
+      dfies_tab      = lt_dfies
+    EXCEPTIONS
+      not_found      = 1
+      internal_error = 2
+      OTHERS         = 3.
+
+  LOOP AT lt_dfies ASSIGNING FIELD-SYMBOL(<ls_dfies>).
+    APPEND INITIAL LINE TO lt_comp ASSIGNING FIELD-SYMBOL(<ls_comp>).
+    <ls_comp>-name = <ls_dfies>-fieldname.
+    CASE <ls_dfies>-inttype.
+      WHEN 'I'. <ls_comp>-type = cl_abap_elemdescr=>get_i( ).
+      WHEN 'b'. <ls_comp>-type = cl_abap_elemdescr=>get_int1( ).
+      WHEN 's'. <ls_comp>-type = cl_abap_elemdescr=>get_int2( ).
+      WHEN 'D'. <ls_comp>-type = cl_abap_elemdescr=>get_d( ).
+      WHEN 'T'. <ls_comp>-type = cl_abap_elemdescr=>get_t( ).
+      WHEN 'C'. <ls_comp>-type = cl_abap_elemdescr=>get_c( CONV i( <ls_dfies>-leng ) ).
+      WHEN 'N'. <ls_comp>-type = cl_abap_elemdescr=>get_n( CONV i( <ls_dfies>-leng ) ).
+      WHEN 'P'. <ls_comp>-type = cl_abap_elemdescr=>get_p( p_length = CONV i( <ls_dfies>-leng ) p_decimals = CONV i( <ls_dfies>-decimals ) ).
+    ENDCASE.
+  ENDLOOP.
+
+  lo_structdescr = cl_abap_structdescr=>create( lt_comp ).
+  DATA(lo_tabledescr) = cl_abap_tabledescr=>create( lo_structdescr ).
+  CREATE DATA er_tab TYPE HANDLE lo_tabledescr.
+
+ENDMETHOD.
+
+************************************************************************
+
 METHOD build_extension_structures.
 
   DATA: lt_dfies TYPE TABLE OF dfies,
