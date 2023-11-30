@@ -168,6 +168,9 @@ CLASS lcl_model IMPLEMENTATION.
           IF column = highest_column.
             t_fields = get_field_attributes( ip_table  = p_table
                                              it_fields = t_fields ).
+            IF t_fields IS INITIAL.
+               RETURN.
+            ENDIF.
             r_tab = create_dynamic_table( t_fields ).
             ASSIGN r_tab->* TO <lt_list>.
           ENDIF.
@@ -235,7 +238,7 @@ CLASS lcl_model IMPLEMENTATION.
 
     CALL FUNCTION 'DDIF_FIELDINFO_GET'
       EXPORTING
-        tabname        = 'SBOOK'
+        tabname        = CONV ddobjname( ip_table )
       TABLES
         dfies_tab      = lt_dfies
       EXCEPTIONS
@@ -245,6 +248,11 @@ CLASS lcl_model IMPLEMENTATION.
 
     LOOP AT it_fields INTO DATA(ls_field).
       READ TABLE lt_dfies INTO DATA(ls_dfies) WITH KEY fieldname = ls_field-fieldname.
+      IF sy-subrc <> 0.
+        WRITE: / icon_led_red AS ICON, 'Unknown column'.
+        CLEAR rt_fields.
+        RETURN.
+      ENDIF.
       ls_field-inttype  = ls_dfies-inttype.
       ls_field-leng     = ls_dfies-leng.
       ls_field-decimals = ls_dfies-decimals.
