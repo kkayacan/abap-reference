@@ -24,6 +24,7 @@ public section.
       !IP_BODY type STRING optional
       !IP_SEND_LENGTH type ABAP_BOOL default ABAP_FALSE
       !IT_FORM type WDY_KEY_VALUE_LIST optional
+      !IT_HEADER type WDY_KEY_VALUE_LIST optional
       !IP_MULTIPART type ABAP_BOOL default ABAP_FALSE
       !IP_FILE type XSTRING optional
       !IP_FILE_NAME type STRING optional
@@ -53,6 +54,7 @@ CLASS ZCL_HTTP IMPLEMENTATION.
 * | [--->] IP_BODY                        TYPE        STRING(optional)
 * | [--->] IP_SEND_LENGTH                 TYPE        ABAP_BOOL (default =ABAP_FALSE)
 * | [--->] IT_FORM                        TYPE        WDY_KEY_VALUE_LIST(optional)
+* | [--->] IT_HEADER                      TYPE        WDY_KEY_VALUE_LIST(optional)
 * | [--->] IP_MULTIPART                   TYPE        ABAP_BOOL (default =ABAP_FALSE)
 * | [--->] IP_FILE                        TYPE        XSTRING(optional)
 * | [--->] IP_FILE_NAME                   TYPE        STRING(optional)
@@ -113,7 +115,14 @@ METHOD request.
                                           value = 'keep-alive' ).
   ENDIF.
 
-  FIELD-SYMBOLS <ls_form> LIKE LINE OF it_form.
+  FIELD-SYMBOLS: <ls_form>   LIKE LINE OF it_form,
+                 <ls_header> LIKE LINE OF it_header.
+
+  LOOP AT it_header ASSIGNING <ls_header>.
+    lo_client->request->set_header_field(
+      name  = <ls_header>-key
+      value = <ls_header>-value ).
+  ENDLOOP.
 
   IF ip_body IS NOT INITIAL.
     lo_client->request->set_content_type( content_type = if_rest_media_type=>gc_appl_json ).
