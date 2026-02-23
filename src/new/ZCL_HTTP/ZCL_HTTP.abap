@@ -145,7 +145,7 @@ METHOD request.
     CREATE OBJECT lo_rest_client
       EXPORTING
         io_http_client = lo_client.
-    cl_http_utility=>set_request_uri( request = lo_client->request uri = ip_endpoint ).
+*    cl_http_utility=>set_request_uri( request = lo_client->request uri = ip_endpoint ).
     lo_upload_request = lo_rest_client->if_rest_client~create_request_entity( ).
     CREATE OBJECT lo_form_data.
     lo_form_data->set_file( iv_name = 'file' iv_filename = ip_file_name iv_type = 'application/octet-stream' iv_data = ip_file ).
@@ -163,6 +163,8 @@ METHOD request.
   ENDIF.
 
   IF ip_file IS INITIAL.
+
+    lo_client->request->set_header_field( name = '~request_uri' value = ip_endpoint ).
 
     lo_client->send(
       EXCEPTIONS
